@@ -1,2 +1,2 @@
-opencv-python
-numpy
+matplotlib>=3.0.0
+networkx>=2.0
