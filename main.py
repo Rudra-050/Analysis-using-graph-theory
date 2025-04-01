@@ -101,7 +101,7 @@ def analyze_and_visualize(nodes, edges):
         print(f"❌ Error during analysis: {str(e)}")
 
 def plot_graph(nodes, edges, eulerian_status, hamiltonian_status):
-    """Visualize the graph with analysis highlights."""
+    """Visualize the graph with Eulerian, Hamiltonian, and Shortest Path Highlights."""
     G = nx.Graph()
     G.add_nodes_from(nodes)
     G.add_edges_from(edges)
@@ -113,18 +113,36 @@ def plot_graph(nodes, edges, eulerian_status, hamiltonian_status):
     nx.draw_networkx_nodes(G, pos, node_color="skyblue", node_size=800)
     nx.draw_networkx_labels(G, pos, font_size=10)
     nx.draw_networkx_edges(G, pos, edge_color="gray", width=1)
-    
+
     # Highlight Eulerian path if exists
     if "Eulerian" in eulerian_status:
         nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color="red", width=2)
-    
+
     # Highlight Hamiltonian path if exists
     if hamiltonian_status == "Hamiltonian Path Exists":
         nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_color="green", node_size=800)
-    
+
+    # 🎯 Shortest Path Computation
+    try:
+        start = input("Enter start node for shortest path: ").strip()
+        end = input("Enter end node: ").strip()
+
+        if start in nodes and end in nodes:
+            shortest_path = nx.shortest_path(G, source=start, target=end)
+            path_edges = list(zip(shortest_path, shortest_path[1:]))
+
+            nx.draw_networkx_edges(G, pos, edgelist=path_edges, edge_color="blue", width=3)
+            print(f"📏 Shortest Path: {' -> '.join(shortest_path)}")
+        else:
+            print("❌ Invalid nodes for shortest path.")
+
+    except Exception as e:
+        print(f"⚠ Error computing shortest path: {e}")
+
     plt.title(f"Graph Analysis\nEulerian: {eulerian_status} | Hamiltonian: {hamiltonian_status}")
     plt.axis("off")
     plt.show()
+
 
 if __name__ == "__main__":
     print("\n📊 Graph Analysis Tool")
